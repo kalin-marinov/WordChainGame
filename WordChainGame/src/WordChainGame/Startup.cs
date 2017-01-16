@@ -53,10 +53,6 @@ namespace WordChainGame
             ConfigureAuth(app);
 
             app.UseMvc();
-
-            var managerTest = app.ApplicationServices.GetService<UserManager<User>>();
-            var test =  managerTest.CreateAsync(new User("test2") { IsAdmin = true }, "Pass1234!").Result;
-            var test2 = managerTest.FindByNameAsync("test").Result;
         }
     }
 
