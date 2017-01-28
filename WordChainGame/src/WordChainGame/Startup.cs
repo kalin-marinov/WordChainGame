@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using WordChainGame.Auth;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using System;
+using WordChainGame.Auth;
 using WordChainGame.Auth.Hashing;
 
 namespace WordChainGame
@@ -62,7 +57,6 @@ namespace WordChainGame
         /// <summary> Adds Identity to the project without having roles / role manager / role validator </summary>
         public static void AddIdentity(this IServiceCollection services, Action<IdentityOptions> setupAction = null)
         {
-
             services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect("localhost:6379"));
             services.AddScoped<IDatabase>(s => s.GetService<IConnectionMultiplexer>().GetDatabase());
             services.AddSingleton<IHashSerailizer<User>, UserHasher>();
@@ -80,6 +74,8 @@ namespace WordChainGame
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
             services.TryAddScoped<UserManager<User>, UserManager<User>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<User>, ClaimsFactory>();
+            services.TryAddScoped<SignInManager<User>>();
 
             if (setupAction != null)
             {

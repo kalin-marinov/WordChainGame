@@ -92,8 +92,12 @@ namespace WordChainGame.Auth
         public Task<TUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
             => FindByNameAsync(userId, cancellationToken);
 
-        public Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-            => seralizer.DeSearlizeAsync(GetKey(normalizedUserName), db);
+        public async Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        {
+            var user = await seralizer.DeSearlizeAsync(GetKey(normalizedUserName), db);
+            user.NormalizedName = normalizedUserName;
+            return user;
+        }
 
         public Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken)
            => db.HashSetAsync(GetKey(user), nameof(user.SecurityStamp), stamp);

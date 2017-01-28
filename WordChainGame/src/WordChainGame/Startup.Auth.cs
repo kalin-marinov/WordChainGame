@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.IdentityModel.Tokens;
 using WordChainGame.Auth;
+using Microsoft.AspNetCore.Identity;
 
 namespace WordChainGame
 {
@@ -14,9 +15,11 @@ namespace WordChainGame
         // The secret key every token will be signed with.
         // Keep this safe on the server!
         private static readonly string secretKey = "mysupersecret_secretkey!123";
+        private IApplicationBuilder app;
 
         private void ConfigureAuth(IApplicationBuilder app)
         {
+            this.app = app;
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
 
             app.UseSimpleTokenProvider(new TokenProviderOptions
@@ -59,16 +62,20 @@ namespace WordChainGame
 
         }
 
-        private Task<ClaimsIdentity> GetIdentity(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
+            var signInManger = app.ApplicationServices.GetService(typeof(SignInManager<User>)) as SignInManager<User>;
+            var userManager = app.ApplicationServices.GetService(typeof(UserManager<User>)) as UserManager<User>;
+
+            var user = await userManager.FindByNameAsync(username);
+
             // Don't do this in production, obviously!
-            if (username == "TEST" && password == "TEST123")
+            if ((await signInManger.CheckPasswordSignInAsync(user, password, lockoutOnFailure:false)) == SignInResult.Success)
             {
-                return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] { }));
+                return new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] { });
             }
 
-            // Credentials are invalid, or account doesn't exist
-            return Task.FromResult<ClaimsIdentity>(null);
+            return null;
         }
     }
 }

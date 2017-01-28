@@ -21,35 +21,10 @@ namespace WordChainGame.Data
 
             var db = client.GetDatabase("Test");
 
-            BsonClassMap.RegisterClassMap<Topic>(cm =>
-            {
-                cm.AutoMap();
-            });
 
-            var col = db.GetCollection<Topic>("Topics").AsQueryable().ToList();
 
-            var test = db.GetCollection<Topic>("TestCollection");
-
+            
             Console.WriteLine("there");
         }
-    }
-
-    public class Topic
-    {
-        [BsonId]
-        public ObjectId Id { get; set; }
-
-        public string Name { get; set; }
-
-        public ICollection<Word> Words { get; set;}
-    }
-
-    public class Word
-    {
-        public string Value { get; set; }
-
-        public string Author { get; set; }
-
-        
     }
 }
