@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WordChainGame.Data.Exceptions;
 using WordChainGame.Data.Models;
 using WordChainGame.Data.Mongo.Models;
+using WordChainGame.Data.Topics.Models;
 
 namespace WordChainGame.Data
 {
@@ -25,21 +26,20 @@ namespace WordChainGame.Data
         public async Task<IReadOnlyCollection<MongoTopic>> GetAllTopicsAsync()
             => await database.GetCollection<MongoTopic>("Topics").AsQueryable().ToListAsync();
 
-        public async Task<IReadOnlyCollection<string>> GetAllTopicNames()
-            => await topics.Find(_ => true)
-                 .Project(Builders<MongoTopic>.Projection.Expression(t => t.Name))
-                 .ToListAsync();
 
 
-        public async Task<IReadOnlyCollection<string>> GetTopicNames(int skip, int take, Expression<Func<MongoTopic, object>> sortField)
+        public async Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(int skip, int take)
         {
             var query = topics.Find(_ => true)
                  .Skip(skip)
                  .Limit(take)
-                 .Project(Builders<MongoTopic>.Projection.Expression(t => t.Name));
-
-            if (sortField != null)
-                query = query.SortBy(sortField);
+                 .Project(Builders<MongoTopic>.Projection.Expression(t =>
+                      new TopicDescription
+                      {
+                          Name = t.Name,
+                          Author = t.Author,
+                          WordCount = t.Words.Count
+                      }));
 
             return await query.ToListAsync();
         }

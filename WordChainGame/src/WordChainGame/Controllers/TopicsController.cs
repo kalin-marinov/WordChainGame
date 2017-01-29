@@ -19,14 +19,14 @@ namespace WordChainGame.Controllers
         [HttpPost Route("/api/topics")]
         public async Task<IActionResult> Post(string name)
         {
-           await manager.AddTopicAsync(name);
+            await manager.AddTopicAsync(name, User.Identity.Name);
             return Created("/topic/{id}", name);
         }
 
         [HttpGet Route("/api/topics")]
         public async Task<ActionResult> Get(int skip, int take, TopicSortCriteria sortBy)
         {
-            var allTopics = await manager.GetTopicNamesAsync(skip, take, sortBy);
+            var allTopics = await manager.GetTopicsAsync(skip, take, sortBy);
             return Ok(allTopics);
         }
     }

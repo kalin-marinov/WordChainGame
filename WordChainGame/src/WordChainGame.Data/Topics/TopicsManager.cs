@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WordChainGame.Data.Models;
 using WordChainGame.Data.Topics;
+using WordChainGame.Data.Topics.Models;
 using WordChainGame.Data.Topics.Validation;
 using WordChainGame.Data.Topics.Words.Validation;
 
@@ -23,7 +24,7 @@ namespace WordChainGame.Data
             this.wordValidator = wordValidator;
         }
 
-        public async Task AddTopicAsync(string topic)
+        public async Task AddTopicAsync(string topic, string author)
         {
             topicValidator.Validate(topic);
 
@@ -32,6 +33,7 @@ namespace WordChainGame.Data
 
             var newTopic = new TTopic
             {
+                Author = author,
                 Name = topic,
                 Words = new List<Word>()
             };
@@ -39,14 +41,16 @@ namespace WordChainGame.Data
             await store.AddTopicAsync(newTopic);
         }
 
-        public async Task<IReadOnlyCollection<string>> GetTopicNamesAsync(int skip, int take, TopicSortCriteria sortBy)
+        public async Task<IReadOnlyCollection<TopicDescription>> GetTopicsAsync(int skip, int take, TopicSortCriteria sortBy)
         {
+            var topics = await store.GetTopicDescriptions(skip, take);
+
             switch (sortBy)
             {
                 case TopicSortCriteria.Name:
-                    return await store.GetTopicNames(skip, take, t => t.Name);
+                    return topics.OrderBy(x => x.Name).ToArray();
                 case TopicSortCriteria.Count:
-                    return (await store.GetTopicNames(skip, take, null));
+                    return topics.OrderBy(x => x.WordCount).ToArray();
                 default:
                     throw new ArgumentException();
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WordChainGame.Data.Models;
+using WordChainGame.Data.Topics.Models;
 
 namespace WordChainGame.Data
 {
@@ -16,9 +17,9 @@ namespace WordChainGame.Data
 
         Task<bool> TopicExistsAsync(string topic);
 
-        Task<IReadOnlyCollection<string>> GetAllTopicNames();
+        //Task<IReadOnlyCollection<string>> GetAllTopicNames();
 
-        Task<IReadOnlyCollection<string>> GetTopicNames(int skip, int take, Expression<Func<TopicType, object>> sortField);
+        Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(int skip, int take);
 
         Task<Word> GetLastWord(string topic);
 
