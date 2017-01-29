@@ -17,6 +17,8 @@ namespace WordChainGame.Auth.Hashing
                 IsAdmin = (bool)db.HashGet(key, nameof(User.IsAdmin)),
                 PasswordHash = db.HashGet(key, nameof(User.PasswordHash)),
                 SecurityStamp = db.HashGet(key, nameof(User.SecurityStamp)),
+                Email = db.HashGet(key, nameof(User.Email)),
+                FullName = db.HashGet(key, nameof(User.FullName))
             };
         }
 
@@ -28,9 +30,11 @@ namespace WordChainGame.Auth.Hashing
             return new User
             {
                 UserName = await db.HashGetAsync(key, nameof(User.UserName)),
-                IsAdmin = (bool) await db.HashGetAsync(key, nameof(User.IsAdmin)),
+                IsAdmin = (bool)await db.HashGetAsync(key, nameof(User.IsAdmin)),
                 PasswordHash = await db.HashGetAsync(key, nameof(User.PasswordHash)),
                 SecurityStamp = await db.HashGetAsync(key, nameof(User.SecurityStamp)),
+                Email = await db.HashGetAsync(key, nameof(User.Email)),
+                FullName = await db.HashGetAsync(key, nameof(User.FullName)),
             };
         }
 
@@ -44,7 +48,9 @@ namespace WordChainGame.Auth.Hashing
                 new HashEntry(nameof(instance.UserName), instance.UserName),
                 new HashEntry(nameof(instance.PasswordHash), instance.PasswordHash),
                 new HashEntry(nameof(instance.IsAdmin), instance.IsAdmin),
-                new HashEntry(nameof(instance.SecurityStamp), instance.SecurityStamp)
+                new HashEntry(nameof(instance.SecurityStamp), instance.SecurityStamp),
+                new HashEntry(nameof(instance.FullName), instance.FullName),
+                new HashEntry(nameof(instance.Email), instance.Email)
             };
         }
     }

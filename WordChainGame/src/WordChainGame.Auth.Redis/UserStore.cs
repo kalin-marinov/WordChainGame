@@ -72,7 +72,6 @@ namespace WordChainGame.Auth
             }
         }
 
-
         public async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken)
         {
             try
@@ -95,7 +94,10 @@ namespace WordChainGame.Auth
         public async Task<TUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             var user = await seralizer.DeSearlizeAsync(GetKey(normalizedUserName), db);
-            user.NormalizedName = normalizedUserName;
+
+            if (user != null)
+                user.NormalizedName = normalizedUserName;
+
             return user;
         }
 

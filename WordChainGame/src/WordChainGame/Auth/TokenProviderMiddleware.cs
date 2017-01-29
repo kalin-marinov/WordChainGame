@@ -73,11 +73,26 @@ namespace WordChainGame.Auth
             var identity = await _options.IdentityResolver(username, password);
             if (identity == null)
             {
-                context.Response.StatusCode = 400;
+                context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Invalid username or password.");
                 return;
             }
 
+            string encodedJwt = await PrepareToken(username, identity);
+
+            var response = new
+            {
+                access_token = encodedJwt,
+                expires_in = (int)_options.Expiration.TotalSeconds
+            };
+
+            // Serialize and return the response
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, _serializerSettings));
+        }
+
+        private async Task<string> PrepareToken(Microsoft.Extensions.Primitives.StringValues username, ClaimsIdentity identity)
+        {
             var now = DateTime.UtcNow;
 
             // Specifically add the jti (nonce), iat (issued timestamp), and sub (subject/user) claims.
@@ -99,16 +114,7 @@ namespace WordChainGame.Auth
                 signingCredentials: _options.SigningCredentials);
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
-            {
-                access_token = encodedJwt,
-                expires_in = (int)_options.Expiration.TotalSeconds
-            };
-
-            // Serialize and return the response
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response, _serializerSettings));
+            return encodedJwt;
         }
 
         private static void ThrowIfInvalidOptions(TokenProviderOptions options)

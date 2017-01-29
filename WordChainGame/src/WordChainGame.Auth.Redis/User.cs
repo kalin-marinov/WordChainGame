@@ -8,6 +8,10 @@ namespace WordChainGame.Auth
 
         public string NormalizedName { get; set; }
 
+        public string FullName { get; set; }
+
+        public string Email { get; set; }
+
         public string PasswordHash { get; set; }
 
         public string SecurityStamp { get; set; }
@@ -20,10 +24,12 @@ namespace WordChainGame.Auth
         }
         
 
-        public User(string userName)
+        public User(string userName, string fullName, string email)
             : this()
         {
             this.UserName = userName;
+            this.FullName = fullName;
+            this.Email = email;
             this.SecurityStamp = Guid.NewGuid().ToString();
         }
     }

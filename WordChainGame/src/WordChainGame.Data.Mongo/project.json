@@ -2,6 +2,9 @@
   "version": "1.0.0-*",
 
   "dependencies": {
+    "MongoDB.Driver": "2.4.1",
+    "WordChainGame.Data": "1.0.0-*",
+    "Ensure.That": "5.0.0"
   },
 
   "frameworks": {

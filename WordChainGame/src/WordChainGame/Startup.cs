@@ -6,10 +6,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using StackExchange.Redis;
 using System;
 using WordChainGame.Auth;
 using WordChainGame.Auth.Hashing;
+using WordChainGame.Data;
+using WordChainGame.Data.Models;
+using WordChainGame.Data.Mongo.Models;
+using WordChainGame.Data.Reports;
+using WordChainGame.Data.Topics;
+using WordChainGame.Data.Topics.Validation;
+using WordChainGame.Data.Topics.Words;
+using WordChainGame.Data.Topics.Words.Validation;
 
 namespace WordChainGame
 {
@@ -59,6 +68,18 @@ namespace WordChainGame
         {
             services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect("localhost:6379"));
             services.AddScoped<IDatabase>(s => s.GetService<IConnectionMultiplexer>().GetDatabase());
+
+            services.AddScoped<IMongoClient>(_ => new MongoClient("mongodb://admin:admin@ds135029.mlab.com:35029/wordgame"));
+            services.AddScoped<IMongoDatabase>(s => s.GetService<IMongoClient>().GetDatabase("wordgame"));
+
+            services.AddScoped<IReportStore<MongoReport>, ReportStore>();
+            services.AddScoped<IReportsManager<MongoReport>, ReportManager<MongoReport, MongoTopic>>();
+
+            services.AddScoped<ITopicStore<MongoTopic>, TopicStore>();
+            services.AddScoped<ITopicValidator, TopicValidator>();
+            services.AddScoped<IWordValidator, WordValidator>();
+            services.AddScoped<ITopicManager<MongoTopic>, TopicsManager<MongoTopic>>();
+
             services.AddSingleton<IHashSerailizer<User>, UserHasher>();
             services.TryAddScoped<IUserStore<User>, UserStore<User>>();
 

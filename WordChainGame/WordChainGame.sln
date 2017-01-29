@@ -12,17 +12,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame", "src\WordChainGame\WordChainGame.xproj", "{DE12AA1A-9955-4BE5-AB0F-55BF73DC9C57}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Auth", "src\WordChainGame.Auth\WordChainGame.Auth.xproj", "{2E6C3EC8-BE2F-4B96-AE81-0E0DA2692AB0}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data", "src\WordChainGame.Data\WordChainGame.Data.xproj", "{1FB2C2AD-7A07-4039-A5B2-801307AF88E9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{78C94B80-205A-428C-87C3-F7CBC1180468}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data.IntegrationTests", "WordChainGame.Data.Tests\WordChainGame.Data.IntegrationTests.xproj", "{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{0430CDFF-072A-4866-BEDA-5D73660FD1B3}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data.Auth.Tests", "WordChainGame.Data.Auth.Tests\WordChainGame.Data.Auth.Tests.xproj", "{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Auth.Redis", "src\WordChainGame.Auth.Redis\WordChainGame.Auth.Redis.xproj", "{2E6C3EC8-BE2F-4B96-AE81-0E0DA2692AB0}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data.Mongo", "src\WordChainGame.Data.Mongo\WordChainGame.Data.Mongo.xproj", "{1FB2C2AD-7A07-4039-A5B2-801307AF88E9}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Auth.Redis.Tests", "tests\WordChainGame.Auth.Redis.Tests\WordChainGame.Auth.Redis.Tests.xproj", "{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data.Mongo.Integration", "tests\WordChainGame.Data.Mongo.Tests\WordChainGame.Data.Mongo.Integration.xproj", "{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data", "src\WordChainGame.Data\WordChainGame.Data.xproj", "{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,24 +44,29 @@ Global
 		{1FB2C2AD-7A07-4039-A5B2-801307AF88E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FB2C2AD-7A07-4039-A5B2-801307AF88E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FB2C2AD-7A07-4039-A5B2-801307AF88E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DE12AA1A-9955-4BE5-AB0F-55BF73DC9C57} = {7307866C-75D7-48BF-ADCF-A3A7946D80C4}
+		{0430CDFF-072A-4866-BEDA-5D73660FD1B3} = {78C94B80-205A-428C-87C3-F7CBC1180468}
 		{2E6C3EC8-BE2F-4B96-AE81-0E0DA2692AB0} = {7307866C-75D7-48BF-ADCF-A3A7946D80C4}
 		{1FB2C2AD-7A07-4039-A5B2-801307AF88E9} = {7307866C-75D7-48BF-ADCF-A3A7946D80C4}
-		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA} = {0430CDFF-072A-4866-BEDA-5D73660FD1B3}
-		{0430CDFF-072A-4866-BEDA-5D73660FD1B3} = {78C94B80-205A-428C-87C3-F7CBC1180468}
 		{4E8BA3BB-18F2-4B80-896C-0E5A85744F35} = {0430CDFF-072A-4866-BEDA-5D73660FD1B3}
+		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA} = {0430CDFF-072A-4866-BEDA-5D73660FD1B3}
+		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D} = {7307866C-75D7-48BF-ADCF-A3A7946D80C4}
 	EndGlobalSection
 EndGlobal

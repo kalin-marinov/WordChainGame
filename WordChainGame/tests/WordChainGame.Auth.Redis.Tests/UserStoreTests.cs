@@ -24,32 +24,35 @@ namespace WordChainGame.Data.Auth.Tests
         public async Task CanManageUsers()
         {
             await store.CreateAsync(new User
-           {
+            {
                 UserName = "test",
                 NormalizedName = "TEST",
+                Email = "test@test.test",
+                FullName = "tester",
                 PasswordHash = "hash(password)",
                 SecurityStamp = Guid.NewGuid().ToString()
             }, token);
 
-           var user = await store.FindByNameAsync("TEST", token);
+            var user = await store.FindByNameAsync("TEST", token);
 
             Assert.Equal("test", user.UserName);
-            Assert.Equal("hash(password)", user.PasswordHash);
+            Assert.Equal("test@test.test", user.Email);
         }
 
         [Fact]
         public async Task CanDeleteUsers()
         {
-            await store.CreateAsync(new User
+            var result = await store.CreateAsync(new User
             {
                 UserName = "test",
+                Email = "test@test.test",
+                FullName = "tester",
                 NormalizedName = "TEST",
                 PasswordHash = "hash(password)",
                 SecurityStamp = Guid.NewGuid().ToString()
             }, token);
 
             var user = await store.FindByNameAsync("TEST", token);
-            user.NormalizedName = "TEST"; // Simulating the user manager work (i.e. setting normalized names constantly and password hashes)
             await store.DeleteAsync(user, token);
 
             user = await store.FindByNameAsync("TEST", token);
