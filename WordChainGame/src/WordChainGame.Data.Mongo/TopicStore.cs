@@ -12,7 +12,7 @@ using WordChainGame.Data.Topics.Models;
 
 namespace WordChainGame.Data
 {
-    public class TopicStore : ITopicStore<MongoTopic>
+    public class TopicStore : ITopicStore
     {
         private IMongoDatabase database;
 
@@ -27,10 +27,11 @@ namespace WordChainGame.Data
             => await database.GetCollection<MongoTopic>("Topics").AsQueryable().ToListAsync();
 
 
-
-        public async Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(int skip, int take)
+        public async Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(
+            int skip, int take, string sortField)
         {
             var query = topics.Find(_ => true)
+                 .Sort(Builders<MongoTopic>.Sort.Ascending(sortField))
                  .Skip(skip)
                  .Limit(take)
                  .Project(Builders<MongoTopic>.Projection.Expression(t =>
@@ -38,14 +39,17 @@ namespace WordChainGame.Data
                       {
                           Name = t.Name,
                           Author = t.Author,
-                          WordCount = t.Words.Count
+                          WordCount = t.WordCount
                       }));
 
             return await query.ToListAsync();
         }
 
-        public Task AddTopicAsync(MongoTopic topic)
-            => topics.InsertOneAsync(topic);
+        public Task AddTopicAsync(string topicName, string author)
+        {
+            var topic = new MongoTopic { Name = topicName, Author = author, Words = new Word[0], WordCount = 0 };
+            return topics.InsertOneAsync(topic);
+        }
 
 
         public Task<bool> TopicExistsAsync(string topic)
@@ -54,10 +58,13 @@ namespace WordChainGame.Data
         public async Task DeleteWordAsync(string topic, string word)
         {
             var updateAction = Builders<MongoTopic>.Update.PullFilter(t => t.Words, w => w.Value == word);
-            var result = await topics.UpdateOneAsync(t => t.Name == topic, updateAction);
 
-            Ensure.That(result.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
-            Ensure.That(result.ModifiedCount).IsNot(0).WithException(_ => new WordNotFoundException(word));
+            var updateResult = await topics.UpdateOneAsync(t => t.Name == topic, updateAction);
+            Ensure.That(updateResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
+            Ensure.That(updateResult.ModifiedCount).IsNot(0).WithException(_ => new WordNotFoundException(word));
+
+            var decrementAction = Builders<MongoTopic>.Update.Inc(t => t.WordCount, -updateResult.ModifiedCount);
+            await topics.UpdateOneAsync(t => t.Name == topic, decrementAction);
         }
 
         public async Task<IEnumerable<Word>> GetWords(string topic)
@@ -81,10 +88,14 @@ namespace WordChainGame.Data
 
         public async Task AddWordAsync(string topic, Word word)
         {
-            var updateAction = Builders<MongoTopic>.Update.Push(t => t.Words, word);
-            var result = await topics.UpdateOneAsync(t => t.Name == topic, updateAction);
+            var addWordAction = Builders<MongoTopic>.Update.Push(t => t.Words, word);
+            var incrementAction = Builders<MongoTopic>.Update.Inc(t => t.WordCount, 1);
 
-            Ensure.That(result.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
+            var addWordResult = await topics.UpdateOneAsync(t => t.Name == topic, addWordAction);
+            Ensure.That(addWordResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
+
+            var incrementResult = await topics.UpdateOneAsync(t => t.Name == topic, incrementAction);
+            Ensure.That(incrementResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
         }
 
         public async Task<Word> GetLastWord(string topic)

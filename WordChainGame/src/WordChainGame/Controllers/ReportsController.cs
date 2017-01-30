@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WordChainGame.Data.Models;
 using WordChainGame.Data.Mongo.Models;
 using WordChainGame.Data.Reports;
+using WordChainGame.Helpers.Attributes;
 
 namespace WordChainGame.Controllers
 {
+    [RejectInvalidModel, HandleErrors, Authorize]
     public class ReportsController : Controller
     {
-        private IReportsManager<MongoReport> manager;
+        private IReportsManager manager;
 
-        public ReportsController(IReportsManager<MongoReport> manager)
+        public ReportsController(IReportsManager manager)
         {
             this.manager = manager;
         }
@@ -17,7 +21,7 @@ namespace WordChainGame.Controllers
         public async Task<IActionResult> Get()
           => Ok(await manager.GetAll(HttpContext.RequestAborted));
 
-        public async Task<IActionResult> Post(MongoReport report)
+        public async Task<IActionResult> Post(Report report)
         {
             await manager.Add(report, HttpContext.RequestAborted);
             return NoContent();

@@ -9,5 +9,7 @@ namespace WordChainGame.Data.Mongo.Models
         [BsonId]
         public ObjectId Id { get; set; }
 
+        public int WordCount { get; set; }
+
     }
 }

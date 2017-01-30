@@ -2,7 +2,7 @@
 
 namespace WordChainGame.Data.Models
 {
-    public class ReportBase
+    public class Report
     {
         [Required]
         public string Reporter { get; set; }

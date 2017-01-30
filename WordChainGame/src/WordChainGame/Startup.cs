@@ -72,13 +72,13 @@ namespace WordChainGame
             services.AddScoped<IMongoClient>(_ => new MongoClient("mongodb://admin:admin@ds135029.mlab.com:35029/wordgame"));
             services.AddScoped<IMongoDatabase>(s => s.GetService<IMongoClient>().GetDatabase("wordgame"));
 
-            services.AddScoped<IReportStore<MongoReport>, ReportStore>();
-            services.AddScoped<IReportsManager<MongoReport>, ReportManager<MongoReport, MongoTopic>>();
+            services.AddScoped<IReportStore, ReportStore>();
+            services.AddScoped<IReportsManager, ReportManager>();
 
-            services.AddScoped<ITopicStore<MongoTopic>, TopicStore>();
+            services.AddScoped<ITopicStore, TopicStore>();
             services.AddScoped<ITopicValidator, TopicValidator>();
             services.AddScoped<IWordValidator, WordValidator>();
-            services.AddScoped<ITopicManager<MongoTopic>, TopicsManager<MongoTopic>>();
+            services.AddScoped<ITopicManager, TopicsManager>();
 
             services.AddSingleton<IHashSerailizer<User>, UserHasher>();
             services.TryAddScoped<IUserStore<User>, UserStore<User>>();

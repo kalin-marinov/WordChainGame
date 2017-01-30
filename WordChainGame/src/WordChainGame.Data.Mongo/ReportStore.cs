@@ -9,7 +9,7 @@ using WordChainGame.Data.Reports;
 
 namespace WordChainGame.Data
 {
-    public class ReportStore : IReportStore<MongoReport>
+    public class ReportStore : IReportStore
     {
         private IMongoDatabase database;
 
@@ -20,10 +20,10 @@ namespace WordChainGame.Data
             this.database = database;
         }
 
-        public Task Add(MongoReport report, CancellationToken token = default(CancellationToken))
-            => reports.InsertOneAsync(report, new InsertOneOptions { BypassDocumentValidation = false }, token);
+        public Task Add(Report report, CancellationToken token = default(CancellationToken))
+            => reports.InsertOneAsync(MongoReport.FromBase(report), new InsertOneOptions { BypassDocumentValidation = false }, token);
 
-        public async Task<IReadOnlyCollection<MongoReport>> GetAll(CancellationToken token = default(CancellationToken))
+        public async Task<IReadOnlyCollection<Report>> GetAll(CancellationToken token = default(CancellationToken))
             => await reports.AsQueryable().ToListAsync(token);
     }
 }

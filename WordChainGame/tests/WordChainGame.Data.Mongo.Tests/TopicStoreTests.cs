@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WordChainGame.Data.Models;
-using WordChainGame.Data.Mongo.Models;
 using Xunit;
 
 namespace WordChainGame.Data.Tests
@@ -28,7 +27,7 @@ namespace WordChainGame.Data.Tests
         public async Task CanManageTopics()
         {
             var name = Guid.NewGuid().ToString();
-            await store.AddTopicAsync(new MongoTopic { Name = name });
+            await store.AddTopicAsync(name, "somebody");
 
             var allTopicsNames = (await store.GetAllTopicsAsync()).Select(x=> x.Name);
             Assert.Contains(name, allTopicsNames);
@@ -77,13 +76,13 @@ namespace WordChainGame.Data.Tests
         [Fact]
         public async Task CanPaginateTopicDescription()
         {
-            await store.AddTopicAsync(new MongoTopic { Name = "t1", Words = new Word[0] });
-            await store.AddTopicAsync(new MongoTopic { Name = "t2", Words = new Word[0] });
-            await store.AddTopicAsync(new MongoTopic { Name = "t3", Words = new Word[0] });
-            await store.AddTopicAsync(new MongoTopic { Name = "t4", Words = new Word[0] });
-            await store.AddTopicAsync(new MongoTopic { Name = "t5", Words = new Word[0] });
+            await store.AddTopicAsync("t1", "pesho");
+            await store.AddTopicAsync("t2", "pesho");
+            await store.AddTopicAsync("t3", "pesho");
+            await store.AddTopicAsync("t4", "pesho");
+            await store.AddTopicAsync("t5", "pesho");
 
-            var topics = await store.GetTopicDescriptions(2, 2);
+            var topics = await store.GetTopicDescriptions(2, 2, "Name");
 
             Assert.Equal("t3", topics.First().Name);
             Assert.Equal(2, topics.Count());
@@ -91,7 +90,7 @@ namespace WordChainGame.Data.Tests
 
         private async Task AddFewWords(string name)
         {
-            await store.AddTopicAsync(new MongoTopic { Name = name, Words = new Word[0] });
+            await store.AddTopicAsync(name, "pesho");
 
             await store.AddWordAsync(name, new Word { Value = "test1", Author = "tester" });
             await store.AddWordAsync(name, new Word { Value = "1test2", Author = "tester" });

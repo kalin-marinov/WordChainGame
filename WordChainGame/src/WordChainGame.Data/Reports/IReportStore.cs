@@ -5,10 +5,10 @@ using WordChainGame.Data.Models;
 
 namespace WordChainGame.Data.Reports
 {
-    public interface IReportStore<TReport> where TReport: ReportBase
+    public interface IReportStore
     {
-        Task Add(TReport report, CancellationToken token = default(CancellationToken));
+        Task Add(Report report, CancellationToken token = default(CancellationToken));
 
-        Task<IReadOnlyCollection<TReport>> GetAll(CancellationToken token = default(CancellationToken));
+        Task<IReadOnlyCollection<Report>> GetAll(CancellationToken token = default(CancellationToken));
     }
 }

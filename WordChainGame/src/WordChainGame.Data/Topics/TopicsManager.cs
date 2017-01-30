@@ -10,14 +10,13 @@ using WordChainGame.Data.Topics.Words.Validation;
 
 namespace WordChainGame.Data
 {
-    public class TopicsManager<TTopic> : ITopicManager<TTopic>
-        where TTopic : TopicBase, new()
+    public class TopicsManager : ITopicManager
     {
-        ITopicStore<TTopic> store;
+        ITopicStore store;
         IWordValidator wordValidator;
         ITopicValidator topicValidator;
 
-        public TopicsManager(ITopicStore<TTopic> store, ITopicValidator topicValidator, IWordValidator wordValidator)
+        public TopicsManager(ITopicStore store, ITopicValidator topicValidator, IWordValidator wordValidator)
         {
             this.store = store;
             this.topicValidator = topicValidator;
@@ -31,26 +30,18 @@ namespace WordChainGame.Data
             if (await store.TopicExistsAsync(topic))
                 throw new ArgumentException("Topic already exists", nameof(topic));
 
-            var newTopic = new TTopic
-            {
-                Author = author,
-                Name = topic,
-                Words = new List<Word>()
-            };
 
-            await store.AddTopicAsync(newTopic);
+            await store.AddTopicAsync(topic, author);
         }
 
         public async Task<IReadOnlyCollection<TopicDescription>> GetTopicsAsync(int skip, int take, TopicSortCriteria sortBy)
         {
-            var topics = await store.GetTopicDescriptions(skip, take);
-
             switch (sortBy)
             {
                 case TopicSortCriteria.Name:
-                    return topics.OrderBy(x => x.Name).ToArray();
+                    return await store.GetTopicDescriptions(skip, take, "Name");
                 case TopicSortCriteria.Count:
-                    return topics.OrderBy(x => x.WordCount).ToArray();
+                    return await store.GetTopicDescriptions(skip, take, "WordCount");
                 default:
                     throw new ArgumentException();
             }

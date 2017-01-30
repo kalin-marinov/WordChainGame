@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using WordChainGame.Data.Mongo.Models;
 using WordChainGame.Data.Topics;
 using WordChainGame.Helpers.Attributes;
 
@@ -9,9 +8,9 @@ namespace WordChainGame.Controllers
     [HandleErrors]
     public class TopicsController : Controller
     {
-        private ITopicManager<MongoTopic> manager;
+        private ITopicManager manager;
 
-        public TopicsController(ITopicManager<MongoTopic> manager)
+        public TopicsController(ITopicManager manager)
         {
             this.manager = manager;
         }

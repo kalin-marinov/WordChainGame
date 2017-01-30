@@ -7,19 +7,17 @@ using WordChainGame.Data.Topics.Models;
 
 namespace WordChainGame.Data
 {
-    public interface ITopicStore<TopicType> where TopicType : TopicBase
+    public interface ITopicStore
     {
         Task AddWordAsync(string topicName, Word word);
 
-        Task AddTopicAsync(TopicType topic);
+        Task AddTopicAsync(string name, string author);
 
         Task DeleteWordAsync(string topic, string word);
 
         Task<bool> TopicExistsAsync(string topic);
 
-        //Task<IReadOnlyCollection<string>> GetAllTopicNames();
-
-        Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(int skip, int take);
+        Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(int skip, int take, string sortField);
 
         Task<Word> GetLastWord(string topic);
 

@@ -5,7 +5,7 @@ using WordChainGame.Data.Topics.Models;
 
 namespace WordChainGame.Data.Topics
 {
-    public interface ITopicManager<TTopic> where TTopic : TopicBase
+    public interface ITopicManager
     {
         Task AddTopicAsync(string topic, string author);
 

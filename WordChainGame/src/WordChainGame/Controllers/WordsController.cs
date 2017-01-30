@@ -1,19 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using WordChainGame.Data;
-using WordChainGame.Data.Mongo.Models;
 using WordChainGame.Data.Topics;
 
 namespace WordChainGame.Controllers
 {
     public class WordsController : Controller
     {
-        private ITopicManager<MongoTopic> manager;
+        private ITopicManager manager;
 
-        public WordsController(ITopicManager<MongoTopic> manager)
+        public WordsController(ITopicManager manager)
         {
             this.manager = manager;
         }

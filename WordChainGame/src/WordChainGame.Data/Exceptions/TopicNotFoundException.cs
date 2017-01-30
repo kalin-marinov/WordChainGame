@@ -6,7 +6,7 @@ namespace WordChainGame.Data.Exceptions
     {
         public string Topic { get; private set; }
 
-        public TopicNotFoundException(string topic)
+        public TopicNotFoundException(string topic) : this(topic, $"Topic {topic} was not found!")
         {
             this.Topic = topic;
         }
