@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using WordChainGame.Data.Topics;
 using WordChainGame.Helpers.Attributes;
+using WordChainGame.Models.Topics;
 
 namespace WordChainGame.Controllers
 {
-    [HandleErrors]
+    [RejectInvalidModel HandleErrors]
     public class TopicsController : Controller
     {
         private ITopicManager manager;
@@ -16,16 +17,16 @@ namespace WordChainGame.Controllers
         }
 
         [HttpPost Route("/api/topics")]
-        public async Task<IActionResult> Post(string name)
+        public async Task<IActionResult> Post(CreateTopicModel topic)
         {
-            await manager.AddTopicAsync(name, User.Identity.Name);
-            return Created("/topic/{id}", name);
+            await manager.AddTopicAsync(topic.Name, User.Identity.Name);
+            return Created("/topic/{id}", topic.Name);
         }
 
         [HttpGet Route("/api/topics")]
-        public async Task<ActionResult> Get(int skip, int take, TopicSortCriteria sortBy)
+        public async Task<ActionResult> Get(TopicsFilter filter)
         {
-            var allTopics = await manager.GetTopicsAsync(skip, take, sortBy);
+            var allTopics = await manager.GetTopicsAsync(filter.Skip, filter.Take, filter.SortBy);
             return Ok(allTopics);
         }
     }
