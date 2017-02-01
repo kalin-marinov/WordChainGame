@@ -12,8 +12,6 @@ using System;
 using WordChainGame.Auth;
 using WordChainGame.Auth.Hashing;
 using WordChainGame.Data;
-using WordChainGame.Data.Models;
-using WordChainGame.Data.Mongo.Models;
 using WordChainGame.Data.Reports;
 using WordChainGame.Data.Topics;
 using WordChainGame.Data.Topics.Validation;

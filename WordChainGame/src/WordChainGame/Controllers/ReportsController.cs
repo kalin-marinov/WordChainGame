@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WordChainGame.Data.Models;
-using WordChainGame.Data.Mongo.Models;
 using WordChainGame.Data.Reports;
 using WordChainGame.Helpers.Attributes;
 

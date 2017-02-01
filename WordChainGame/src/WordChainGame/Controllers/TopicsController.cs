@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WordChainGame.Data.Topics;
 using WordChainGame.Helpers.Attributes;
@@ -6,7 +7,7 @@ using WordChainGame.Models.Topics;
 
 namespace WordChainGame.Controllers
 {
-    [RejectInvalidModel HandleErrors]
+    [RejectInvalidModel, HandleErrors, Authorize]
     public class TopicsController : Controller
     {
         private ITopicManager manager;
