@@ -2,10 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Threading.Tasks;
 
 namespace WordChainGame.Auth
 {
@@ -41,10 +40,6 @@ namespace WordChainGame.Auth
         /// </summary>
         public SigningCredentials SigningCredentials { get; set; }
 
-        /// <summary>
-        /// Resolves a user identity given a username and password.
-        /// </summary>
-        public Func<string, string, Task<ClaimsIdentity>> IdentityResolver { get; set; }
 
         /// <summary>
         /// Generates a random value (nonce) for each generated token.

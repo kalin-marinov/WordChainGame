@@ -32,7 +32,7 @@ namespace WordChainGame.Controllers
             return NoContent();
         }
 
-        [HttpDelete Route("/api/topics/{topic}/words")]
+        [HttpDelete Route("/api/topics/{topic}/words") Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Delete(WordIdentifier word)
         {
             await manager.DeleteWordAsync(word.Topic, word.Word);

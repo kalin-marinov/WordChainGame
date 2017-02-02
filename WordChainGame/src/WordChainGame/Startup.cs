@@ -6,11 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using StackExchange.Redis;
-using System;
 using WordChainGame.Auth;
 using WordChainGame.Auth.Hashing;
+using WordChainGame.Auth.Identity;
 using WordChainGame.Data;
 using WordChainGame.Data.Reports;
 using WordChainGame.Data.Topics;
@@ -39,11 +41,15 @@ namespace WordChainGame
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
             services.AddMvc();
 
-            services.AddIdentity();
+            services.AddIdentity(Configuration);
+            services.AddTopicStorage(Configuration);
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("admin", "True"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,21 +68,12 @@ namespace WordChainGame
     {
 
         /// <summary> Adds Identity to the project without having roles / role manager / role validator </summary>
-        public static void AddIdentity(this IServiceCollection services, Action<IdentityOptions> setupAction = null)
+        public static void AddIdentity(this IServiceCollection services, IConfigurationRoot configuration)
         {
-            services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect("localhost:6379"));
+            services.AddSingleton<IConnectionMultiplexer>(
+                _ => ConnectionMultiplexer.Connect(configuration["Storage:RedisConnection"]));
+
             services.AddScoped<IDatabase>(s => s.GetService<IConnectionMultiplexer>().GetDatabase());
-
-            services.AddScoped<IMongoClient>(_ => new MongoClient("mongodb://admin:admin@ds135029.mlab.com:35029/wordgame"));
-            services.AddScoped<IMongoDatabase>(s => s.GetService<IMongoClient>().GetDatabase("wordgame"));
-
-            services.AddScoped<IReportStore, ReportStore>();
-            services.AddScoped<IReportsManager, ReportManager>();
-
-            services.AddScoped<ITopicStore, TopicStore>();
-            services.AddScoped<ITopicValidator, TopicValidator>();
-            services.AddScoped<IWordValidator, WordValidator>();
-            services.AddScoped<ITopicManager, TopicsManager>();
 
             services.AddSingleton<IHashSerailizer<User>, UserHasher>();
             services.TryAddScoped<IUserStore<User>, UserStore<User>>();
@@ -95,11 +92,30 @@ namespace WordChainGame
             services.TryAddScoped<UserManager<User>, UserManager<User>>();
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, ClaimsFactory>();
             services.TryAddScoped<SignInManager<User>>();
+            services.TryAddScoped<TokenProvider>();
+            services.TryAddScoped<IIdentityResolver, IdentityResolver>();
 
-            if (setupAction != null)
+            services.AddScoped<IOptions<TokenProviderOptions>>(_ => Options.Create(new TokenProviderOptions
             {
-                services.Configure(setupAction);
-            }
+                Path = "/api/token",
+                Audience = "ExampleAudience",
+                Issuer = "ExampleIssuer",
+                SigningCredentials = new SigningCredentials(Startup.signingKey, SecurityAlgorithms.HmacSha256),
+            }));
+        }
+
+        public static void AddTopicStorage(this IServiceCollection services, IConfigurationRoot configuration)
+        {
+            services.AddScoped<IMongoClient>(_ => new MongoClient(configuration["Storage:MongoConnection"]));
+            services.AddScoped<IMongoDatabase>(s => s.GetService<IMongoClient>().GetDatabase("wordgame"));
+
+            services.AddScoped<IReportStore, ReportStore>();
+            services.AddScoped<IReportsManager, ReportManager>();
+
+            services.AddScoped<ITopicStore, TopicStore>();
+            services.AddScoped<ITopicValidator, TopicValidator>();
+            services.AddScoped<IWordValidator, WordValidator>();
+            services.AddScoped<ITopicManager, TopicsManager>();
         }
     }
 

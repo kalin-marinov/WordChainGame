@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using WordChainGame.Data.Models;
 using WordChainGame.Data.Reports;
@@ -12,17 +13,22 @@ namespace WordChainGame.Controllers
     {
         private IReportsManager manager;
 
+        private CancellationToken abortToken => HttpContext.RequestAborted;
+
         public ReportsController(IReportsManager manager)
         {
             this.manager = manager;
         }
 
+        [HttpGet Route("/api/reports")]
         public async Task<IActionResult> Get()
-          => Ok(await manager.GetAll(HttpContext.RequestAborted));
+          => Ok(await manager.GetAll(token: abortToken));
 
+
+        [HttpPost Route("/api/reports")]
         public async Task<IActionResult> Post(Report report)
         {
-            await manager.Add(report, HttpContext.RequestAborted);
+            await manager.Add(report, token: abortToken);
             return NoContent();
         }
     }
