@@ -25,5 +25,8 @@ namespace WordChainGame.Data
 
         public async Task<IReadOnlyCollection<Report>> GetAll(CancellationToken token = default(CancellationToken))
             => await reports.AsQueryable().ToListAsync(token);
+
+        public Task DeleteByReporter(string reporter, CancellationToken token = default(CancellationToken))
+            => reports.DeleteManyAsync(r => r.Reporter == reporter, token);
     }
 }

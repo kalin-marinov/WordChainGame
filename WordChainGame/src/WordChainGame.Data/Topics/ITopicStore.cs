@@ -9,25 +9,26 @@ namespace WordChainGame.Data
 {
     public interface ITopicStore
     {
-        Task AddWordAsync(string topicName, Word word);
-
         Task AddTopicAsync(string name, string author);
-
-        Task DeleteWordAsync(string topic, string word);
 
         Task<bool> TopicExistsAsync(string topic);
 
-        Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(int skip, int take, string sortField);
+        Task DeleteTopicsByAuthorAsync(string author);
 
-        Task<Word> GetLastWord(string topic);
+        Task<IReadOnlyCollection<TopicDescription>> GetTopicsAsync(int skip, int take, string sortField);
 
-        Task<IEnumerable<Word>> GetWords(string topic, int skip, int take);
+        Task<Word> GetLastWordAsync(string topic);
 
-        Task<bool> WordExists(string topic, string word, string author);
+        Task<IEnumerable<Word>> GetWordsAsync(string topic, int skip, int take);
 
-        Task<bool> IsBlackListed(string topic, string word);
+        Task AddWordAsync(string topicName, Word word);
 
-        Task AddToBlackList(string topic, string word);
+        Task DeleteWordAsync(string topic, string word);
 
+        Task<bool> WordExistsAsync(string topic, string word, string author);
+
+        Task<bool> IsBlackListedAsync(string topic, string word);
+
+        Task AddToBlackListAsync(string topic, string word);
     }
 }

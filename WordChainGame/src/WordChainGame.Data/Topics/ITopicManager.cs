@@ -16,5 +16,7 @@ namespace WordChainGame.Data.Topics
         Task AddWordAsync(string topic, string word, string author);
 
         Task DeleteWordAsync(string topic, string word);
+
+        Task DeleteTopicsByAuthorAsync(string author);
     }
 }

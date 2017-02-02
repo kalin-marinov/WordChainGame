@@ -66,7 +66,7 @@ namespace WordChainGame.Data.Tests
             var name = Guid.NewGuid().ToString();
             await AddFewWords(name);
 
-            var topicWords = await store.GetWords(name, skip:2, take: 2);
+            var topicWords = await store.GetWordsAsync(name, skip:2, take: 2);
 
             Assert.Equal("2test3", topicWords.First().Value);
             Assert.Equal(2, topicWords.Count());
@@ -82,7 +82,7 @@ namespace WordChainGame.Data.Tests
             await store.AddTopicAsync("t4", "pesho");
             await store.AddTopicAsync("t5", "pesho");
 
-            var topics = await store.GetTopicDescriptions(2, 2, "Name");
+            var topics = await store.GetTopicsAsync(2, 2, "Name");
 
             Assert.Equal("t3", topics.First().Name);
             Assert.Equal(2, topics.Count());
@@ -92,9 +92,9 @@ namespace WordChainGame.Data.Tests
         public async Task CanBlackListWord()
         {
             await store.AddTopicAsync("t1", "pesho");
-            await store.AddToBlackList("t1", "word1");
-            var w1BlackList = await store.IsBlackListed("t1", "word1");
-            var w2shoBlackList = await store.IsBlackListed("t1", "word2");
+            await store.AddToBlackListAsync("t1", "word1");
+            var w1BlackList = await store.IsBlackListedAsync("t1", "word1");
+            var w2shoBlackList = await store.IsBlackListedAsync("t1", "word2");
 
             Assert.True(w1BlackList);
             Assert.False(w2shoBlackList);

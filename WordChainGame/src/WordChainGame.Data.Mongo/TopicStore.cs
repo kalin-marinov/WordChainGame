@@ -27,7 +27,7 @@ namespace WordChainGame.Data
             => await database.GetCollection<MongoTopic>("Topics").AsQueryable().ToListAsync();
 
 
-        public async Task<IReadOnlyCollection<TopicDescription>> GetTopicDescriptions(
+        public async Task<IReadOnlyCollection<TopicDescription>> GetTopicsAsync(
             int skip, int take, string sortField)
         {
             var query = topics.Find(_ => true)
@@ -83,7 +83,7 @@ namespace WordChainGame.Data
             return topicData.Words;
         }
 
-        public async Task<IEnumerable<Word>> GetWords(string topic, int skip, int take)
+        public async Task<IEnumerable<Word>> GetWordsAsync(string topic, int skip, int take)
         {
             var topicData = topics.Find(t => t.Name == topic)
                 .Project(t => t.Words.Skip(skip).Take(take));
@@ -106,7 +106,7 @@ namespace WordChainGame.Data
             Ensure.That(incrementResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
         }
 
-        public async Task<Word> GetLastWord(string topic)
+        public async Task<Word> GetLastWordAsync(string topic)
         {
             var lastWordQuery = topics
                .Find(Builders<MongoTopic>.Filter.Eq(t => t.Name, topic))
@@ -115,7 +115,7 @@ namespace WordChainGame.Data
             return await lastWordQuery.FirstOrDefaultAsync();
         }
 
-        public async Task<bool> IsBlackListed(string topic, string word)
+        public async Task<bool> IsBlackListedAsync(string topic, string word)
         {
             var lastWordQuery = topics
                .Find(Builders<MongoTopic>.Filter.Eq(t => t.Name, topic))
@@ -124,14 +124,18 @@ namespace WordChainGame.Data
             return await lastWordQuery.FirstOrDefaultAsync();
         }
 
-        public async Task AddToBlackList(string topic, string word)
+        public async Task AddToBlackListAsync(string topic, string word)
         {
             var addWordAction = Builders<MongoTopic>.Update.Push(t => t.BlackList, word);
             var addWordResult = await topics.UpdateOneAsync(t => t.Name == topic, addWordAction);
             Ensure.That(addWordResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
         }
 
-        public Task<bool> WordExists(string topic, string word, string author)
+        public Task DeleteTopicsByAuthorAsync(string author)
+        => topics.DeleteManyAsync(t => t.Name == author);
+
+
+        public Task<bool> WordExistsAsync(string topic, string word, string author)
            => topics.Find(t => t.Name == topic && t.Words.Any(w => w.Value == word && w.Author == author)).AnyAsync();
     }
 }

@@ -38,9 +38,9 @@ namespace WordChainGame.Data
             switch (sortBy)
             {
                 case TopicSortCriteria.Name:
-                    return await store.GetTopicDescriptions(skip, take, "Name");
+                    return await store.GetTopicsAsync(skip, take, "Name");
                 case TopicSortCriteria.Count:
-                    return await store.GetTopicDescriptions(skip, take, "WordCount");
+                    return await store.GetTopicsAsync(skip, take, "WordCount");
                 default:
                     throw new ArgumentException();
             }
@@ -49,7 +49,7 @@ namespace WordChainGame.Data
         public async Task<IEnumerable<Word>> GetWordsAsync(string topic, int skip, int take)
         {
             topicValidator.Validate(topic);
-            return await store.GetWords(topic, skip, take);
+            return await store.GetWordsAsync(topic, skip, take);
         }
 
         public async Task AddWordAsync(string topic, string word, string author)
@@ -57,10 +57,10 @@ namespace WordChainGame.Data
             topicValidator.Validate(topic);
             wordValidator.Validate(word);
 
-            if (await store.IsBlackListed(topic, word))
+            if (await store.IsBlackListedAsync(topic, word))
                 throw new ArgumentException($"The word {word} is black-listed for topic {topic}", nameof(word));
 
-            var lastWord = await store.GetLastWord(topic);
+            var lastWord = await store.GetLastWordAsync(topic);
 
             if (lastWord != null && lastWord.Value.Last() != word.First())
                 throw new ArgumentException("The new word must start with the last letter of the previous one", nameof(word));
@@ -75,7 +75,11 @@ namespace WordChainGame.Data
             wordValidator.Validate(word);
 
             await store.DeleteWordAsync(topic, word);
-            await store.AddToBlackList(topic, word);
+            await store.AddToBlackListAsync(topic, word);
         }
+
+        public  Task DeleteTopicsByAuthorAsync(string author)
+            => store.DeleteTopicsByAuthorAsync(author);
+
     }
 }
