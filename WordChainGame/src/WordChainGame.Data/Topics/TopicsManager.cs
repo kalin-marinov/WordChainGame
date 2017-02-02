@@ -58,6 +58,9 @@ namespace WordChainGame.Data
             topicValidator.Validate(topic);
             wordValidator.Validate(word);
 
+            if (await store.IsBlackListed(topic, word))
+                throw new ArgumentException($"The word {word} is black-listed for topic {topic}", nameof(word));
+
             var lastWord = await store.GetLastWord(topic);
 
             if (lastWord != null && lastWord.Value.Last() != word.First())

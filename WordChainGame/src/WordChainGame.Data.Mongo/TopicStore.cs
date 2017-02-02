@@ -47,7 +47,15 @@ namespace WordChainGame.Data
 
         public Task AddTopicAsync(string topicName, string author)
         {
-            var topic = new MongoTopic { Name = topicName, Author = author, Words = new Word[0], WordCount = 0 };
+            var topic = new MongoTopic
+            {
+                Name = topicName,
+                Author = author,
+                Words = new Word[0],
+                WordCount = 0,
+                BlackList = new string[0]
+            };
+
             return topics.InsertOneAsync(topic);
         }
 
@@ -105,6 +113,22 @@ namespace WordChainGame.Data
                .Project(Builders<MongoTopic>.Projection.Expression(t => t.Words.LastOrDefault()));
 
             return await lastWordQuery.FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> IsBlackListed(string topic, string word)
+        {
+            var lastWordQuery = topics
+               .Find(Builders<MongoTopic>.Filter.Eq(t => t.Name, topic))
+               .Project(Builders<MongoTopic>.Projection.Expression(t => t.BlackList.Any(w => w == word)));
+
+            return await lastWordQuery.FirstOrDefaultAsync();
+        }
+
+        public async Task AddToBlackList(string topic, string word)
+        {
+            var addWordAction = Builders<MongoTopic>.Update.Push(t => t.BlackList, word);
+            var addWordResult = await topics.UpdateOneAsync(t => t.Name == topic, addWordAction);
+            Ensure.That(addWordResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
         }
 
         public Task<bool> WordExists(string topic, string word, string author)

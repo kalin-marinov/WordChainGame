@@ -24,5 +24,10 @@ namespace WordChainGame.Data
         Task<IEnumerable<Word>> GetWords(string topic, int skip, int take);
 
         Task<bool> WordExists(string topic, string word, string author);
+
+        Task<bool> IsBlackListed(string topic, string word);
+
+        Task AddToBlackList(string topic, string word);
+
     }
 }

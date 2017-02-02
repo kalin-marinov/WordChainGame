@@ -88,6 +88,19 @@ namespace WordChainGame.Data.Tests
             Assert.Equal(2, topics.Count());
         }
 
+        [Fact]
+        public async Task CanBlackListWord()
+        {
+            await store.AddTopicAsync("t1", "pesho");
+            await store.AddToBlackList("t1", "word1");
+            var w1BlackList = await store.IsBlackListed("t1", "word1");
+            var w2shoBlackList = await store.IsBlackListed("t1", "word2");
+
+            Assert.True(w1BlackList);
+            Assert.False(w2shoBlackList);
+        }
+
+
         private async Task AddFewWords(string name)
         {
             await store.AddTopicAsync(name, "pesho");

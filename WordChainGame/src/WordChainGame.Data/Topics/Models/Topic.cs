@@ -9,6 +9,8 @@ namespace WordChainGame.Data.Models
         public string Author { get; set; }
 
         public virtual ICollection<Word> Words { get; set; }
+
+        public virtual ICollection<string> BlackList { get; set; }
     }
 
 }
