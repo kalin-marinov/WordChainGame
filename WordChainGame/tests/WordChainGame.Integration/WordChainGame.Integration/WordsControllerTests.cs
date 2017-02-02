@@ -55,7 +55,7 @@ namespace WordChainGame.Integration
             response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
             var responseString = await response.Content.ReadAsStringAsync();
 
-            Assert.Equal("The new word must start with the last letter of the previous one", responseString);
+            Assert.Contains("The new word must start with the last letter of the previous one", responseString);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 

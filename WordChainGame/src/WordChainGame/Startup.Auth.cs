@@ -9,8 +9,8 @@ namespace WordChainGame
     {
         // The secret key every token will be signed with.
         // Keep this safe on the server!
-        public static readonly string secretKey = "mysupersecret_secretkey!123";
-        public static readonly SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+        internal  string secretKey => Configuration["Security:SigningKey"];
+        internal readonly SymmetricSecurityKey signingKey;
 
         private IApplicationBuilder app;
 

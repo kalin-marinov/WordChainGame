@@ -40,7 +40,7 @@ namespace WordChainGame.Controllers
         }
 
 
-        [HttpPut Route("api/Users")]
+        [HttpPatch Route("api/Users") Authorize]
         public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
         {
             var user = await manager.FindByNameAsync(User.Identity.Name);

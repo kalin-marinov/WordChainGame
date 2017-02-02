@@ -63,6 +63,9 @@ namespace WordChainGame.Auth
         {
             try
             {
+                if (!(await db.HashExistsAsync(GetKey(user), nameof(user.UserName))))
+                    user.IsAdmin = true;  
+
                 await db.HashSetAsync(GetKey(user), seralizer.Searlize(user));
                 return IdentityResult.Success;
             }

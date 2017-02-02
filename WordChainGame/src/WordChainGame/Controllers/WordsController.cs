@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using WordChainGame.Data.Topics;
 using WordChainGame.Helpers.Attributes;
@@ -26,7 +25,7 @@ namespace WordChainGame.Controllers
             return Ok(words);
         }
 
-        [Route("/api/topics/{Topic}/words")]
+        [HttpPost Route("/api/topics/{Topic}/words")]
         public async Task<IActionResult> Post(WordIdentifier word)
         {
             await manager.AddWordAsync(word.Topic, word.Word, User.Identity.Name);

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using StackExchange.Redis;
+using System.Text;
 using WordChainGame.Auth;
 using WordChainGame.Auth.Hashing;
 using WordChainGame.Auth.Identity;
@@ -34,6 +35,7 @@ namespace WordChainGame
 
 
             Configuration = builder.Build();
+            signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -43,7 +45,7 @@ namespace WordChainGame
         {
             services.AddMvc();
 
-            services.AddIdentity(Configuration);
+            services.AddIdentity(Configuration, signingKey);
             services.AddTopicStorage(Configuration);
 
             services.AddAuthorization(options =>
@@ -68,7 +70,7 @@ namespace WordChainGame
     {
 
         /// <summary> Adds Identity to the project without having roles / role manager / role validator </summary>
-        public static void AddIdentity(this IServiceCollection services, IConfigurationRoot configuration)
+        public static void AddIdentity(this IServiceCollection services, IConfigurationRoot configuration, SymmetricSecurityKey signingKey)
         {
             services.AddSingleton<IConnectionMultiplexer>(
                 _ => ConnectionMultiplexer.Connect(configuration["Storage:RedisConnection"]));
@@ -100,7 +102,7 @@ namespace WordChainGame
                 Path = "/api/token",
                 Audience = "ExampleAudience",
                 Issuer = "ExampleIssuer",
-                SigningCredentials = new SigningCredentials(Startup.signingKey, SecurityAlgorithms.HmacSha256),
+                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
             }));
         }
 
