@@ -43,5 +43,36 @@ namespace WordChainGame.Integration
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
+        [Fact]
+        public async Task AddWordRejectsInvalidWords()
+        {
+            (await CreateTestTopic()).EnsureSuccessStatusCode();
+
+            var postBody = new Dictionary<string, string> { { "Word", "testWord" } };
+            var response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+
+            postBody = new Dictionary<string, string> { { "Word", "wrongWord" } };
+            response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal("The new word must start with the last letter of the previous one", responseString);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CanAddMultipleWords()
+        {
+            (await CreateTestTopic()).EnsureSuccessStatusCode();
+
+            var postBody = new Dictionary<string, string> { { "Word", "testWord" } };
+            var response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+
+            postBody = new Dictionary<string, string> { { "Word", "daRightWord" } };
+            response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
+
     }
 }

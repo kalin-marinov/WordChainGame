@@ -72,7 +72,6 @@ namespace WordChainGame.Integration
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
-
         [Fact]
         public async Task CreateTopicRequiresAuthorization()
         {

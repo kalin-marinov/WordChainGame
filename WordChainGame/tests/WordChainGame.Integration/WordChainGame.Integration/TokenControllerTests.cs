@@ -20,6 +20,7 @@ namespace WordChainGame.Integration
             Assert.Contains("expires", responseString);
             response.EnsureSuccessStatusCode();
         }
+
         [Fact]
         public async Task RejectsInValidCredentials()
         {

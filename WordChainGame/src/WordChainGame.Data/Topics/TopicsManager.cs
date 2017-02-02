@@ -30,7 +30,6 @@ namespace WordChainGame.Data
             if (await store.TopicExistsAsync(topic))
                 throw new ArgumentException("Topic already exists", nameof(topic));
 
-
             await store.AddTopicAsync(topic, author);
         }
 
@@ -76,6 +75,7 @@ namespace WordChainGame.Data
             wordValidator.Validate(word);
 
             await store.DeleteWordAsync(topic, word);
+            await store.AddToBlackList(topic, word);
         }
     }
 }

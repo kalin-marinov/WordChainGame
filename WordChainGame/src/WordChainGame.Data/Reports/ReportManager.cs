@@ -26,7 +26,6 @@ namespace WordChainGame.Data.Reports
                 throw new ArgumentException($"No word {report.Word} was posted in {report.Topic} by {report.WordAuthor}");
 
             await reportStore.Add(report, token);
-            await topicStore.AddToBlackList(report.Topic, report.Word);
         }
 
         public Task<IReadOnlyCollection<Report>> GetAll(CancellationToken token = default(CancellationToken))
