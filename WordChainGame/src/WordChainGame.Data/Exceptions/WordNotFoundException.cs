@@ -6,19 +6,24 @@ namespace WordChainGame.Data.Exceptions
     {
         public string Word { get; private set; }
 
-        public WordNotFoundException(string topic)
+        public string Topic { get; private set; }
+
+        public WordNotFoundException(string word, string topic) : base($"word {word} was not found in topic {topic}")
         {
-            this.Word = topic;
+            this.Word = word;
+            this.Topic = topic;
         }
 
-        public WordNotFoundException(string topic, string message) : base(message)
+        public WordNotFoundException(string word, string topic, string message) : base(message)
         {
-            this.Word = topic;
+            this.Word = word;
+            this.Topic = topic;
         }
 
-        public WordNotFoundException(string topic, string message, Exception inner) : base(message, inner)
+        public WordNotFoundException(string word, string topic, string message, Exception inner) : base(message, inner)
         {
-            this.Word = topic;
+            this.Word = word;
+            this.Topic = topic;
         }
 
     }

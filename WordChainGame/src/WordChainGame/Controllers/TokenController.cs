@@ -17,15 +17,14 @@ namespace WordChainGame.Controllers
             this.userManager = userManager;
         }
 
-
-        [HttpPost Route("/api/token")]
+        [HttpPost Route("/api/v1/token")]
         public async Task<IActionResult> Post(string username, string password)
         {
             var token = await provider.GenerateToken(username, password);
             return token != null ? Ok(token) as IActionResult : Challenge();
         }
 
-        [HttpDelete Route("/api/token") Authorize]
+        [HttpDelete Route("/api/v1/token") Authorize]
         public async Task<IActionResult> Delete()
         {
             var user = await userManager.FindByNameAsync(User.Identity.Name);

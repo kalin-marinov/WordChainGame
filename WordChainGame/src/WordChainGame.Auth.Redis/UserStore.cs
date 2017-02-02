@@ -63,10 +63,11 @@ namespace WordChainGame.Auth
         {
             try
             {
-                if (!(await db.HashExistsAsync(GetKey(user), nameof(user.UserName))))
+                if (!db.KeyExists("hasUsers"))
                     user.IsAdmin = true;  
 
                 await db.HashSetAsync(GetKey(user), seralizer.Searlize(user));
+                await db.StringSetBitAsync("hasUsers", 0, true);
                 return IdentityResult.Success;
             }
             catch (Exception)
@@ -105,7 +106,17 @@ namespace WordChainGame.Auth
         }
 
         public Task SetSecurityStampAsync(TUser user, string stamp, CancellationToken cancellationToken)
-           => db.HashSetAsync(GetKey(user), nameof(user.SecurityStamp), stamp);
+        {
+            if (user.NormalizedName != null)
+            {
+                return db.HashSetAsync(GetKey(user), nameof(user.SecurityStamp), stamp);
+            }
+            else
+            {
+                user.SecurityStamp = stamp;
+                return Task.CompletedTask;
+            }
+        }
 
         public async Task<string> GetSecurityStampAsync(TUser user, CancellationToken cancellationToken)
            => await db.HashGetAsync(GetKey(user), nameof(user.SecurityStamp));

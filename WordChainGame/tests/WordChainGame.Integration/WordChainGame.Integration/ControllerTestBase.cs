@@ -52,7 +52,7 @@ namespace WordChainGame.Integration
                  { "password", "Test123!" }
              };
 
-            var response = await client.PostAsync("/api/token", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/token", new FormUrlEncodedContent(postBody));
             var responseData = JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
             var token = responseData["access_token"];
 
@@ -74,7 +74,7 @@ namespace WordChainGame.Integration
                  { "email", "test@test.test" }
              };
 
-            var response = await client.PostAsync("/api/users", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/users", new FormUrlEncodedContent(postBody));
             return response;
         }
     }

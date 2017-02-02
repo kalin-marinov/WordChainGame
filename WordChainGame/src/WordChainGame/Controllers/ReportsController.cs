@@ -20,16 +20,16 @@ namespace WordChainGame.Controllers
             this.manager = manager;
         }
 
-        [HttpGet Route("/api/reports")]
+        [HttpGet Route("/api/v1/reports"), Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Get()
           => Ok(await manager.GetAll(token: abortToken));
 
 
-        [HttpPost Route("/api/reports")]
+        [HttpPost Route("/api/v1/reports")]
         public async Task<IActionResult> Post(Report report)
         {
             await manager.Add(report, token: abortToken);
-            return NoContent();
+            return Created("/reports/", "Report Created");
         }
     }
 }

@@ -16,7 +16,7 @@ namespace WordChainGame.Integration
         {
             await Login();
             var postBody = new Dictionary<string, string> { { "name", TestTopic } };
-            var result = await client.PostAsync("/api/topics", new FormUrlEncodedContent(postBody));
+            var result = await client.PostAsync("/api/v1/topics", new FormUrlEncodedContent(postBody));
             return result;
         }
 
@@ -26,11 +26,27 @@ namespace WordChainGame.Integration
             (await CreateTestTopic()).EnsureSuccessStatusCode();
 
             var postBody = new Dictionary<string, string> { { "Word", "testWord" } };
-            var response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
+
+
+        [Fact]
+        public async Task CanDeleteWord()
+        {
+            const string word = "testWord";
+            (await CreateTestTopic()).EnsureSuccessStatusCode();
+
+            var postBody = new Dictionary<string, string> { { "Word", word } };
+            await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+
+            var response  = await client.DeleteAsync($"/api/v1/topics/{TestTopic}/words/{word}");
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
+
 
         [Fact]
         public async Task PostWordRejectsInvalidTopic()
@@ -38,7 +54,7 @@ namespace WordChainGame.Integration
             await Login();
 
             var postBody = new Dictionary<string, string> { { "word", "testWord" } };
-            var response = await client.PostAsync("/api/topics/Invalid/words", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/topics/Invalid/words", new FormUrlEncodedContent(postBody));
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -49,14 +65,24 @@ namespace WordChainGame.Integration
             (await CreateTestTopic()).EnsureSuccessStatusCode();
 
             var postBody = new Dictionary<string, string> { { "Word", "testWord" } };
-            var response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
 
             postBody = new Dictionary<string, string> { { "Word", "wrongWord" } };
-            response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            response = await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("The new word must start with the last letter of the previous one", responseString);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+
+        [Fact]
+        public async Task AddWordRejectsNonAuthorized()
+        {
+            var postBody = new Dictionary<string, string> { { "Word", "testWord" } };
+            var response = await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [Fact]
@@ -65,10 +91,10 @@ namespace WordChainGame.Integration
             (await CreateTestTopic()).EnsureSuccessStatusCode();
 
             var postBody = new Dictionary<string, string> { { "Word", "testWord" } };
-            var response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
 
             postBody = new Dictionary<string, string> { { "Word", "daRightWord" } };
-            response = await client.PostAsync($"/api/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
+            response = await client.PostAsync($"/api/v1/topics/{TestTopic}/words", new FormUrlEncodedContent(postBody));
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);

@@ -1,20 +1,17 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Text;
 
 namespace WordChainGame
 {
     public partial class Startup
     {
-        // The secret key every token will be signed with.
-        // Keep this safe on the server!
         internal  string secretKey => Configuration["Security:SigningKey"];
         internal readonly SymmetricSecurityKey signingKey;
 
         private IApplicationBuilder app;
 
-        private void ConfigureAuth(IApplicationBuilder app)
+        private void ConfigureTokens(IApplicationBuilder app)
         {
             this.app = app;
 

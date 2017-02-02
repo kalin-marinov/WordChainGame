@@ -17,14 +17,14 @@ namespace WordChainGame.Controllers
             this.manager = manager;
         }
 
-        [HttpPost Route("/api/topics")]
+        [HttpPost Route("/api/v1/topics")]
         public async Task<IActionResult> Post(CreateTopicModel topic)
         {
             await manager.AddTopicAsync(topic.Name, User.Identity.Name);
             return Created("/topic/{id}", topic.Name);
         }
 
-        [HttpGet Route("/api/topics")]
+        [HttpGet Route("/api/v1/topics")]
         public async Task<ActionResult> Get(TopicsFilter filter)
         {
             var allTopics = await manager.GetTopicsAsync(filter.Skip, filter.Take, filter.SortBy);

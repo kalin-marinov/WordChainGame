@@ -60,7 +60,7 @@ namespace WordChainGame
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            ConfigureAuth(app);
+            ConfigureTokens(app);
 
             app.UseMvc();
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using WordChainGame.Data.Exceptions;
 using WordChainGame.Data.Models;
 
 namespace WordChainGame.Data.Reports
@@ -20,10 +21,10 @@ namespace WordChainGame.Data.Reports
         public async Task Add(Report report, CancellationToken token = default(CancellationToken))
         {
             if (!(await topicStore.TopicExistsAsync(report.Topic)))
-                throw new ArgumentException("topic does not exist");
+                throw new TopicNotFoundException(report.Topic);
 
             if (!(await topicStore.WordExistsAsync(report.Topic, report.Word, report.WordAuthor)))
-                throw new ArgumentException($"No word {report.Word} was posted in {report.Topic} by {report.WordAuthor}");
+                throw new WordNotFoundException(report.Topic, $"No word {report.Word} was posted in {report.Topic} by {report.WordAuthor}");
 
             await reportStore.Add(report, token);
         }

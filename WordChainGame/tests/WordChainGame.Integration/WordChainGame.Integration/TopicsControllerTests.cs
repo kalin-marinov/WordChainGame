@@ -18,7 +18,7 @@ namespace WordChainGame.Integration
                  { "name", "test" },
              };
 
-            var response = await client.PostAsync("/api/topics", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/topics", new FormUrlEncodedContent(postBody));
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -34,7 +34,7 @@ namespace WordChainGame.Integration
                  { "name", "test" },
              };
 
-            var response = await client.PostAsync("/api/topics", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/topics", new FormUrlEncodedContent(postBody));
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("Topic already exists", responseString);
@@ -47,7 +47,7 @@ namespace WordChainGame.Integration
         {
             await CanCreateTopic();
 
-            var response = await client.GetAsync($"/api/topics?skip=0&take=10&sortBy=name");
+            var response = await client.GetAsync($"/api/v1/topics?skip=0&take=10&sortBy=name");
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Contains("test", responseString);
@@ -59,7 +59,7 @@ namespace WordChainGame.Integration
         {
             await CanCreateTopic();
 
-            var response = await client.GetAsync($"/api/topics");
+            var response = await client.GetAsync($"/api/v1/topics");
             var responseString = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -68,7 +68,7 @@ namespace WordChainGame.Integration
         [Fact]
         public async Task GetTopicsRequiresAuthentication()
         {
-            var response = await client.GetAsync($"/api/topics");
+            var response = await client.GetAsync($"/api/v1/topics");
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
@@ -80,7 +80,7 @@ namespace WordChainGame.Integration
                  { "name", "test" },
              };
 
-            var response = await client.PostAsync("/api/topics", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/topics", new FormUrlEncodedContent(postBody));
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }

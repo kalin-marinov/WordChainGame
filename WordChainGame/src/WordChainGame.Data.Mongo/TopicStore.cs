@@ -69,7 +69,7 @@ namespace WordChainGame.Data
 
             var updateResult = await topics.UpdateOneAsync(t => t.Name == topic, updateAction);
             Ensure.That(updateResult.MatchedCount).IsNot(0).WithException(_ => new TopicNotFoundException(topic));
-            Ensure.That(updateResult.ModifiedCount).IsNot(0).WithException(_ => new WordNotFoundException(word));
+            Ensure.That(updateResult.ModifiedCount).IsNot(0).WithException(_ => new WordNotFoundException(word, topic));
 
             var decrementAction = Builders<MongoTopic>.Update.Inc(t => t.WordCount, -updateResult.ModifiedCount);
             await topics.UpdateOneAsync(t => t.Name == topic, decrementAction);

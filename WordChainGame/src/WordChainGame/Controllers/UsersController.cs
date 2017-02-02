@@ -29,7 +29,7 @@ namespace WordChainGame.Controllers
             this.identityResolver = identityResolver;
         }
 
-        [HttpPost Route("api/Users")]
+        [HttpPost Route("api/v1/Users")]
         public async Task<IActionResult> Post(RegisterUserModel userData)
         {
             var user = new User(userData.UserName, userData.FullName, userData.Email);
@@ -40,7 +40,7 @@ namespace WordChainGame.Controllers
         }
 
 
-        [HttpPatch Route("api/Users") Authorize]
+        [HttpPatch Route("api/v1/Users") Authorize]
         public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
         {
             var user = await manager.FindByNameAsync(User.Identity.Name);
@@ -49,8 +49,8 @@ namespace WordChainGame.Controllers
             return PrepareResponse(result);
         }
 
-        [HttpDelete Route("api/Users/{username}"), Authorize]
-        public async Task<IActionResult> Delete(string username, string password)
+        [HttpDelete Route("api/v1/Users/{username}"), Authorize]
+        public async Task<IActionResult> Delete([FromRoute] string username, [FromForm]string password)
         {
             var user = await manager.FindByNameAsync(username);
 

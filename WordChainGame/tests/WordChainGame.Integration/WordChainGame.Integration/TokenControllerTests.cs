@@ -30,7 +30,7 @@ namespace WordChainGame.Integration
                  { "password", "Test123!" }
              };
 
-            var response = await client.PostAsync("/api/token", new FormUrlEncodedContent(postBody));
+            var response = await client.PostAsync("/api/v1/token", new FormUrlEncodedContent(postBody));
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
