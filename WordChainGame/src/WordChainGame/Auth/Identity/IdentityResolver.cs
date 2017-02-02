@@ -20,6 +20,7 @@ namespace WordChainGame.Auth.Identity
         public async Task<ClaimsIdentity> SignInAsync(string username, string password)
         {
             var user = await userManager.FindByNameAsync(username);
+            if (user == null) return null;
 
             if ((await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false)) == SignInResult.Success)
             {

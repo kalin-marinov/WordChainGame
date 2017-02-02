@@ -12,7 +12,7 @@ namespace WordChainGame.Models
         [Required]
         public string Password { get; set; }
 
-        [Required]
+        [Required EmailAddress]
         public string Email { get; set; }
 
     }

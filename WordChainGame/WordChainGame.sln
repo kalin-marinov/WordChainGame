@@ -20,11 +20,13 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Auth.Redis", 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data.Mongo", "src\WordChainGame.Data.Mongo\WordChainGame.Data.Mongo.xproj", "{1FB2C2AD-7A07-4039-A5B2-801307AF88E9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Auth.Redis.Tests", "tests\WordChainGame.Auth.Redis.Tests\WordChainGame.Auth.Redis.Tests.xproj", "{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Auth.Redis.Integration", "tests\WordChainGame.Auth.Redis.Tests\WordChainGame.Auth.Redis.Integration.xproj", "{4E8BA3BB-18F2-4B80-896C-0E5A85744F35}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data.Mongo.Integration", "tests\WordChainGame.Data.Mongo.Tests\WordChainGame.Data.Mongo.Integration.xproj", "{10B538FC-3DB1-410A-92F3-1C66B8E35BEA}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Data", "src\WordChainGame.Data\WordChainGame.Data.xproj", "{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WordChainGame.Integration", "tests\WordChainGame.Integration\WordChainGame.Integration\WordChainGame.Integration.xproj", "{31EEB4D9-54A8-4578-836E-F17A88B144E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31EEB4D9-54A8-4578-836E-F17A88B144E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31EEB4D9-54A8-4578-836E-F17A88B144E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31EEB4D9-54A8-4578-836E-F17A88B144E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31EEB4D9-54A8-4578-836E-F17A88B144E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,5 +74,6 @@ Global
 		{4E8BA3BB-18F2-4B80-896C-0E5A85744F35} = {0430CDFF-072A-4866-BEDA-5D73660FD1B3}
 		{10B538FC-3DB1-410A-92F3-1C66B8E35BEA} = {0430CDFF-072A-4866-BEDA-5D73660FD1B3}
 		{DB58BE7E-7D5A-41F2-90E8-BE9F7A23B21D} = {7307866C-75D7-48BF-ADCF-A3A7946D80C4}
+		{31EEB4D9-54A8-4578-836E-F17A88B144E4} = {0430CDFF-072A-4866-BEDA-5D73660FD1B3}
 	EndGlobalSection
 EndGlobal

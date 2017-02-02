@@ -60,7 +60,7 @@ namespace WordChainGame.Data
 
             var lastWord = await store.GetLastWord(topic);
 
-            if (lastWord.Value.Last() != word.First())
+            if (lastWord != null && lastWord.Value.Last() != word.First())
                 throw new ArgumentException("The new word must start with the last letter of the previous one", nameof(word));
 
             var newWord = new Word { Author = author, Value = word };
