@@ -21,7 +21,7 @@ namespace WordChainGame.Controllers
         public async Task<IActionResult> Post(CreateTopicModel topic)
         {
             await manager.AddTopicAsync(topic.Name, User.Identity.Name);
-            return Created("/topic/{id}", topic.Name);
+            return Created("/topics/{name}/words", topic.Name);
         }
 
         [HttpGet Route("/api/v1/topics")]
